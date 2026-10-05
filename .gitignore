@@ -1,0 +1,18 @@
+# dipendenze e build
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.env*
+
+# materiale di lavoro (rigenerabile)
+raw-media/
+qa/
+video-tiktok/node_modules/
+video-tiktok/clips/
+video-tiktok/preview/
+video-tiktok/check/
+video-tiktok/*.mp4
+video-tiktok/*.jpg
+restart.sh

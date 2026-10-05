@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+@theme {
+  --color-carta: #f4eee4;
+  --color-carta-2: #ebe3d5;
+  --color-pietra: #8b8176;
+  --color-inchiostro: #1e1915;
+  --color-fumo: #2a231e;
+  --color-vino: #7b2531;
+  --color-vino-scuro: #4b141c;
+  --color-oliva: #5d5e3e;
+  --color-oro: #b48a4f;
+  --font-serif: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-body), "Figtree", system-ui, sans-serif;
+  --ease-calm: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --gutter: clamp(20px, 5vw, 72px);
+  --header-h: 64px;
+  color-scheme: light;
+}
+
+html {
+  background: var(--color-carta);
+  color: var(--color-inchiostro);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  background: var(--color-carta);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-vino);
+  color: var(--color-carta);
+}
+
+fieldset {
+  min-width: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-oro);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.h-section {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 1.6rem + 3.6vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.prose-osteria {
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+/* Pulsanti */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  transition:
+    background-color 0.35s var(--ease-calm),
+    color 0.35s var(--ease-calm),
+    border-color 0.35s var(--ease-calm),
+    transform 0.35s var(--ease-calm);
+  white-space: nowrap;
+}
+.btn-vino {
+  background: var(--color-vino);
+  color: var(--color-carta);
+}
+.btn-vino:hover {
+  background: var(--color-vino-scuro);
+}
+.btn-ghost-light {
+  border: 1px solid rgb(244 238 228 / 0.55);
+  color: var(--color-carta);
+}
+.btn-ghost-light:hover {
+  background: rgb(244 238 228 / 0.12);
+  border-color: var(--color-carta);
+}
+.btn-ghost {
+  border: 1px solid rgb(30 25 21 / 0.3);
+  color: var(--color-inchiostro);
+}
+.btn-ghost:hover {
+  border-color: var(--color-inchiostro);
+  background: rgb(30 25 21 / 0.04);
+}
+
+/* Riga del menù con puntini */
+.dots {
+  flex: 1;
+  border-bottom: 1px dotted rgb(30 25 21 / 0.35);
+  transform: translateY(-0.35em);
+  min-width: 1.5rem;
+}
+
+/* Grana leggera sulla carta */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Stato iniziale degli elementi animati: solo con JS e movimento consentito */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+  }
+  .js [data-clip] {
+    clip-path: inset(100% 0 0 0);
+  }
+  .js [data-split] {
+    visibility: hidden;
+  }
+}
+
+.form-field {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgb(30 25 21 / 0.2);
+  background: #fbf8f2;
+  color: var(--color-inchiostro);
+  font-size: 1rem;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.form-field:focus {
+  outline: none;
+  border-color: var(--color-vino);
+  box-shadow: 0 0 0 3px rgb(123 37 49 / 0.15);
+}
+.form-field[aria-invalid="true"] {
+  border-color: #b3261e;
+}
+select.form-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231e1915' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+dialog::backdrop {
+  background: rgb(20 16 13 / 0.88);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

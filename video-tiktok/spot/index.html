@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<title>Osteria del Borgo · da zero a online</title>
+<style>
+  @font-face { font-family: "Cormorant"; src: url(fonts/cormorant-garamond-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Cormorant"; src: url(fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2"); font-weight: 500; font-style: normal; }
+  @font-face { font-family: "Cormorant"; src: url(fonts/cormorant-garamond-latin-400-italic.woff2) format("woff2"); font-weight: 400; font-style: italic; }
+  @font-face { font-family: "Cormorant"; src: url(fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2"); font-weight: 500; font-style: italic; }
+  @font-face { font-family: "Figtree"; src: url(fonts/figtree-latin-wght-normal.woff2) format("woff2"); font-weight: 300 900; }
+
+  :root {
+    --carta: #f4eee4; --carta2: #ebe3d5; --ink: #1e1915; --bg: #15110e; --vino: #7b2531; --vino2: #9a3340; --oro: #c39a5c; --oliva: #5d5e3e;
+    --serif: "Cormorant", Georgia, serif; --sans: "Figtree", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+  body { font-family: var(--sans); color: var(--carta); -webkit-font-smoothing: antialiased; }
+  #stage { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(120% 70% at 50% 38%, #2a1f19 0%, #17120f 55%, #0f0c0a 100%); }
+  .abs { position: absolute; }
+  .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.012em; }
+  .mask { overflow: hidden; display: block; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+  .mask > span { display: inline-block; }
+
+  /* firma */
+  #sign { right: 150px; top: 168px; font: 600 30px/1 var(--sans); letter-spacing: 0.32em; color: rgba(255,255,255,0.6); margin-right: -0.32em; z-index: 50; }
+
+  /* ---------- 1. HOOK / EDITOR ---------- */
+  #hook { left: 84px; top: 250px; width: 860px; z-index: 6; }
+  #hook .serif { font-size: 124px; line-height: 0.98; color: var(--carta); }
+  #hook em { font-style: italic; color: var(--oro); }
+  #editor { left: 70px; top: 790px; width: 940px; height: 760px; border-radius: 22px; background: #1b1714; border: 1px solid #2f2823; box-shadow: 0 40px 120px -40px rgba(0,0,0,.8); overflow: hidden; z-index: 4; }
+  #editor .bar { height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 26px; background: #221d19; border-bottom: 1px solid #2f2823; }
+  #editor .dot { width: 15px; height: 15px; border-radius: 50%; background: #3a322c; }
+  #editor .tab { margin-left: 26px; padding: 10px 18px; border-radius: 10px 10px 0 0; background: #1b1714; color: #d9cfc2; font: 500 22px/1 var(--sans); align-self: flex-end; }
+  #editor .tab b { color: var(--oro); font-weight: 600; margin-right: 8px; }
+  #editor .side { position: absolute; left: 0; top: 64px; bottom: 0; width: 230px; border-right: 1px solid #2f2823; padding: 24px 22px; font: 400 21px/1.9 var(--sans); color: #7d7166; }
+  #editor .side .on { color: #efe4d6; background: #2a231e; margin: 0 -22px; padding: 0 22px; }
+  #editor .side .dir { color: #a39484; }
+  #code { position: absolute; left: 250px; top: 92px; right: 20px; font: 400 25px/1.75 "Cascadia Mono", Consolas, "Courier New", monospace; color: #d9cfc2; white-space: pre; }
+  #code .ln { display: inline-block; width: 42px; color: #5b5048; text-align: right; margin-right: 22px; }
+  .t-tag { color: #d98a76; } .t-attr { color: #c39a5c; } .t-str { color: #a7b585; } .t-txt { color: #efe4d6; }
+  #caret { display: inline-block; width: 3px; height: 30px; background: var(--oro); vertical-align: -6px; margin-left: 2px; }
+
+  /* ---------- PHONE ---------- */
+  #phone { left: 212px; top: 300px; width: 656px; height: 1434px; border-radius: 96px; background: linear-gradient(145deg, #3b3632, #121010 40%, #262220); padding: 18px; box-shadow: 0 0 0 2px #6a6159 inset, 0 0 0 1px rgba(195,154,92,.25), 0 60px 140px -30px rgba(0,0,0,.85), 0 0 0 1px #000; z-index: 10; transform-origin: 50% 40%; }
+  #phone::before { content: ""; position: absolute; left: -4px; top: 300px; width: 4px; height: 96px; border-radius: 3px; background: #2b2724; }
+  #phone::after { content: ""; position: absolute; right: -4px; top: 360px; width: 4px; height: 150px; border-radius: 3px; background: #2b2724; }
+  #screen { position: relative; width: 620px; height: 1398px; border-radius: 78px; overflow: hidden; background: #000; }
+  #status { position: absolute; left: 0; top: 0; right: 0; height: 56px; z-index: 3; display: flex; align-items: center; justify-content: space-between; padding: 6px 54px 0 64px; font: 600 23px/1 var(--sans); color: #fff; transition: none; }
+  #status .icons { display: flex; gap: 9px; align-items: center; }
+  #island { position: absolute; left: 50%; top: 14px; width: 168px; height: 46px; margin-left: -84px; border-radius: 30px; background: #000; z-index: 4; }
+  #view { position: absolute; left: 0; top: 56px; width: 620px; height: 1342px; overflow: hidden; background: #fff; }
+  #view img { position: absolute; left: 0; top: 0; width: 620px; display: block; }
+  .stage-img { height: auto; }
+  #scan { position: absolute; left: 0; right: 0; height: 3px; top: 0; background: var(--oro); box-shadow: 0 0 22px 6px rgba(195,154,92,.55); opacity: 0; z-index: 2; }
+  #clip { height: 1342px; opacity: 0; }
+  .tap { position: absolute; width: 74px; height: 74px; margin: -37px 0 0 -37px; border-radius: 50%; background: rgba(255,255,255,.38); border: 2px solid rgba(255,255,255,.85); opacity: 0; z-index: 20; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+
+  /* steps */
+  #steps { left: 84px; right: 150px; top: 222px; display: flex; gap: 12px; z-index: 12; }
+  .step { flex: 1; font: 600 26px/1 var(--sans); letter-spacing: .04em; color: rgba(244,238,228,.38); }
+  .step i { font-style: normal; display: block; font-size: 17px; letter-spacing: .2em; margin-bottom: 10px; color: rgba(244,238,228,.3); }
+  .step .rail { margin-top: 14px; height: 3px; border-radius: 3px; background: rgba(244,238,228,.12); overflow: hidden; }
+  .step .fill { height: 100%; width: 100%; background: var(--oro); transform-origin: 0 50%; transform: scaleX(0); }
+  .step.on { color: var(--carta); } .step.on i { color: var(--oro); }
+
+  /* captions */
+  .cap { left: 84px; right: 150px; top: 214px; z-index: 12; font-size: 68px; line-height: 1; color: var(--carta); }
+  .cap em { color: var(--oro); font-style: italic; }
+
+  /* ---------- 4. ONLINE ---------- */
+  #online-title { left: 84px; top: 176px; z-index: 12; }
+  #online-title .serif { font-size: 132px; line-height: .95; }
+  #online-title .serif em { color: var(--oro); font-style: italic; }
+  .card { left: 84px; right: 150px; border-radius: 30px; background: #fff; color: #202124; box-shadow: 0 40px 90px -30px rgba(0,0,0,.75); z-index: 14; overflow: hidden; }
+  #url { top: 370px; height: 112px; display: flex; align-items: center; gap: 20px; padding: 0 34px; border-radius: 60px; background: #f1ede6; }
+  #url .lock { width: 30px; height: 30px; }
+  #url .addr { font: 500 40px/1 var(--sans); color: #1e1915; flex: 1; white-space: nowrap; }
+  #url .addr span { color: #8a8077; }
+  #url .live { display: flex; align-items: center; gap: 10px; font: 600 24px/1 var(--sans); color: #1f7a4d; background: #e3f1e8; padding: 12px 18px; border-radius: 40px; }
+  #url .live b { width: 12px; height: 12px; border-radius: 50%; background: #1f9a5d; box-shadow: 0 0 0 5px rgba(31,154,93,.18); }
+  #serp { top: 520px; padding: 32px 36px 36px; }
+  #serp .q { display: flex; align-items: center; gap: 18px; height: 78px; padding: 0 28px; border-radius: 40px; border: 1.5px solid #dfe1e5; font: 400 30px/1 var(--sans); color: #202124; }
+  #serp .q svg { flex: none; }
+  #serp .tabs { display: flex; gap: 34px; margin: 24px 6px 0; font: 500 22px/1 var(--sans); color: #5f6368; padding-bottom: 18px; border-bottom: 1px solid #ebebeb; }
+  #serp .tabs .on { color: #1a73e8; box-shadow: 0 19px 0 -16px #1a73e8; }
+  #serp .res { margin-top: 26px; display: grid; grid-template-columns: 52px 1fr; column-gap: 16px; }
+  #serp .fav { width: 52px; height: 52px; border-radius: 50%; background: #f1ede6; display: grid; place-items: center; }
+  #serp .fav img { width: 34px; height: 34px; border-radius: 8px; }
+  #serp .site { font: 500 24px/1.25 var(--sans); color: #202124; }
+  #serp .crumb { font: 400 20px/1.3 var(--sans); color: #4d5156; }
+  #serp h3 { grid-column: 1 / -1; margin-top: 16px; font: 400 36px/1.25 var(--sans); color: #1a0dab; }
+  #serp p { grid-column: 1 / -1; margin-top: 8px; font: 400 23px/1.5 var(--sans); color: #4d5156; }
+  #serp .rank { position: absolute; right: 30px; top: 152px; font: 700 20px/1 var(--sans); color: #fff; background: var(--vino); padding: 9px 14px; border-radius: 30px; letter-spacing: .04em; }
+  #mapc { top: 1012px; height: 500px; }
+  #mapc img.map { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #pin { position: absolute; left: 50%; top: 52%; width: 74px; height: 96px; margin: -96px 0 0 -37px; z-index: 2; }
+  #pinshadow { position: absolute; left: 50%; top: 52%; width: 44px; height: 14px; margin: -7px 0 0 -22px; border-radius: 50%; background: rgba(0,0,0,.28); filter: blur(3px); }
+  #placecard { position: absolute; left: 24px; bottom: 24px; right: 24px; display: flex; align-items: center; gap: 18px; background: #fff; border-radius: 22px; padding: 18px 22px; box-shadow: 0 10px 30px rgba(0,0,0,.18); }
+  #placecard img { width: 70px; height: 70px; border-radius: 14px; object-fit: cover; }
+  #placecard b { display: block; font: 600 27px/1.2 var(--sans); color: #202124; }
+  #placecard span { font: 400 21px/1.35 var(--sans); color: #5f6368; }
+  #placecard .open { color: #188038; font-weight: 600; }
+  #osm { position: absolute; right: 14px; top: 12px; font: 400 15px/1 var(--sans); color: #555; background: rgba(255,255,255,.8); padding: 4px 8px; border-radius: 6px; }
+
+  /* ---------- 5. RISULTATO ---------- */
+  #count { left: 84px; right: 150px; top: 172px; z-index: 12; }
+  #count .lbl { font: 600 22px/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--oro); }
+  #count .num { margin-top: 14px; font-size: 150px; line-height: .9; color: var(--carta); }
+  #count .num small { font-size: 70px; color: rgba(244,238,228,.45); }
+  #count .full { position: absolute; left: 340px; top: 74px; font-size: 64px; line-height: 1; font-style: italic; color: var(--oro); white-space: nowrap; }
+  #tables { margin-top: 26px; display: grid; grid-template-columns: repeat(14, 1fr); gap: 10px; }
+  #tables b { height: 22px; border-radius: 6px; background: rgba(244,238,228,.12); }
+  #tables b.on { background: var(--vino2); box-shadow: 0 0 18px rgba(154,51,64,.55); }
+  #lock { position: absolute; inset: 0; z-index: 5; opacity: 0; }
+  #lock .wall { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.55) saturate(.9); }
+  #lock .clock { position: absolute; left: 0; right: 0; top: 120px; text-align: center; color: #fff; }
+  #lock .clock div { font: 300 25px/1 var(--sans); letter-spacing: .02em; opacity: .9; }
+  #lock .clock strong { display: block; margin-top: 6px; font: 500 150px/1 var(--sans); letter-spacing: -.02em; }
+  #notifs { position: absolute; left: 22px; right: 22px; top: 390px; z-index: 6; }
+  .notif { position: absolute; left: 0; right: 0; display: flex; gap: 18px; align-items: flex-start; padding: 22px 24px; border-radius: 34px; background: rgba(246,242,236,.86); backdrop-filter: blur(14px); color: #1e1915; box-shadow: 0 14px 34px rgba(0,0,0,.28); }
+  .notif img { width: 62px; height: 62px; border-radius: 15px; flex: none; }
+  .notif .tx { flex: 1; }
+  .notif .hd { display: flex; justify-content: space-between; font: 600 17px/1.2 var(--sans); letter-spacing: .08em; color: #6f665d; }
+  .notif .hd span { font-weight: 400; letter-spacing: 0; font-size: 19px; }
+  .notif .ti { margin-top: 4px; font: 700 26px/1.2 var(--sans); color: #1e1915; }
+  .notif .bd { margin-top: 2px; font: 400 25px/1.25 var(--sans); color: #2c2621; }
+
+  /* ---------- 6. CTA ---------- */
+  #cta { position: absolute; inset: 0; z-index: 30; opacity: 0; background: #120e0c; }
+  #cta .bgimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .28; filter: blur(2px) saturate(.8); transform-origin: 50% 40%; }
+  #cta .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18,14,12,.65), rgba(18,14,12,.35) 40%, rgba(18,14,12,.85)); }
+  #cta .t { position: absolute; left: 84px; right: 150px; top: 520px; font-size: 150px; line-height: .95; color: var(--carta); }
+  #cta .t em { color: var(--oro); font-style: italic; }
+  #cta .dm { position: absolute; left: 84px; top: 1100px; display: inline-flex; align-items: center; gap: 18px; padding: 30px 44px; border-radius: 80px; background: var(--vino); color: var(--carta); font: 600 44px/1 var(--sans); }
+  #cta .note { position: absolute; left: 84px; right: 150px; top: 1440px; font: 400 25px/1.4 var(--sans); color: rgba(244,238,228,.6); }
+  #cta .eyebrow { position: absolute; left: 84px; top: 440px; font: 600 22px/1 var(--sans); letter-spacing: .24em; text-transform: uppercase; color: rgba(244,238,228,.55); }
+  #veil { position: absolute; inset: 0; background: #0d0a08; opacity: 0; z-index: 40; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1. HOOK -->
+  <div id="hook" class="abs">
+    <div class="serif"><span class="mask"><span>La tua trattoria</span></span><span class="mask"><span>merita più</span></span><span class="mask"><span><em>tavoli pieni.</em></span></span></div>
+  </div>
+  <div id="editor" class="abs">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tab"><b>TSX</b>Hero.tsx</span></div>
+    <div class="side">
+      <div class="dir">osteria-del-borgo</div>
+      <div>&nbsp;&nbsp;app</div>
+      <div>&nbsp;&nbsp;components</div>
+      <div class="on">&nbsp;&nbsp;&nbsp;&nbsp;Hero.tsx</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;Menu.tsx</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;Prenota.tsx</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;Galleria.tsx</div>
+      <div>&nbsp;&nbsp;public/img</div>
+    </div>
+    <div id="code"></div>
+  </div>
+
+  <!-- steps / captions -->
+  <div id="steps" class="abs">
+    <div class="step"><i>01</i>Struttura<div class="rail"><div class="fill"></div></div></div>
+    <div class="step"><i>02</i>Foto<div class="rail"><div class="fill"></div></div></div>
+    <div class="step"><i>03</i>Testi<div class="rail"><div class="fill"></div></div></div>
+    <div class="step"><i>04</i>Colori<div class="rail"><div class="fill"></div></div></div>
+  </div>
+  <div id="cap1" class="abs cap serif"><span class="mask"><span>Il menù, con i prezzi.</span></span></div>
+  <div id="cap2" class="abs cap serif"><span class="mask"><span>La sala, in <em>foto vere.</em></span></span></div>
+  <div id="cap3" class="abs cap serif"><span class="mask"><span>Prenotano dal telefono.</span></span></div>
+
+  <!-- PHONE -->
+  <div id="phone" class="abs">
+    <div id="screen">
+      <div id="island"></div>
+      <div id="status"><span id="clocktxt">9:41</span><span class="icons">
+        <svg width="34" height="22" viewBox="0 0 34 22"><g fill="currentColor"><rect x="0" y="14" width="6" height="8" rx="1.5"/><rect x="9" y="10" width="6" height="12" rx="1.5"/><rect x="18" y="5" width="6" height="17" rx="1.5"/><rect x="27" y="0" width="6" height="22" rx="1.5"/></g></svg>
+        <svg width="30" height="22" viewBox="0 0 30 22"><path fill="currentColor" d="M15 21.5l4.6-5.2a6.6 6.6 0 0 0-9.2 0zM6.8 12.6l2.7 3a8 8 0 0 1 11 0l2.7-3a12 12 0 0 0-16.4 0zM1.6 7.2l2.7 3A15.5 15.5 0 0 1 25.7 10l2.7-3A19.7 19.7 0 0 0 1.6 7.2z"/></svg>
+        <svg width="46" height="22" viewBox="0 0 46 22"><rect x="1" y="1" width="38" height="20" rx="6" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="2"/><rect x="4" y="4" width="30" height="14" rx="3.5" fill="currentColor"/><rect x="41" y="7" width="4" height="8" rx="2" fill="currentColor" fill-opacity=".45"/></svg>
+      </span></div>
+      <div id="view">
+        <img id="st-wire" class="stage-img" src="../assets/stage-wire.jpg" alt="" />
+        <img id="st-foto" class="stage-img" src="../assets/stage-foto.jpg" alt="" />
+        <img id="st-testi" class="stage-img" src="../assets/stage-testi.jpg" alt="" />
+        <img id="st-colori" class="stage-img" src="../assets/stage-colori.jpg" alt="" />
+        <div id="scan"></div>
+        <img id="clip" alt="" />
+      </div>
+      <div id="lock">
+        <img class="wall" src="/img/hero-sala-1200.webp" alt="" />
+        <div class="clock"><div>giovedì 8 ottobre</div><strong>18:42</strong></div>
+        <div id="notifs"></div>
+      </div>
+    </div>
+  </div>
+  <div id="taps"></div>
+
+  <!-- 4. ONLINE -->
+  <div id="online-title" class="abs"><div class="serif"><span class="mask"><span><em>Online.</em></span></span></div></div>
+  <div id="url" class="abs card">
+    <svg class="lock" viewBox="0 0 24 24"><path fill="#5f6368" d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zm-7-2a2 2 0 1 1 4 0v2h-4z"/></svg>
+    <div class="addr" id="addr"></div>
+    <div class="live" id="live"><b></b>Online</div>
+  </div>
+  <div id="serp" class="abs card">
+    <div class="q"><svg width="30" height="30" viewBox="0 0 24 24"><path fill="#9aa0a6" d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 14 15.5l.3.3v.8l5 5 1.5-1.5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg><span id="query"></span></div>
+    <div class="tabs"><span class="on">Tutti</span><span>Maps</span><span>Immagini</span><span>Notizie</span></div>
+    <div class="res">
+      <div class="fav"><img src="icon.svg" alt="" /></div>
+      <div><div class="site">Osteria del Borgo</div><div class="crumb">https://osteriadelborgo.it</div></div>
+      <h3>Osteria del Borgo | Trattoria nell'Oltrepò Pavese</h3>
+      <p>Trattoria di paese nell'Oltrepò Pavese: risotti, agnolotti fatti a mano, salame di Varzi e vini delle nostre colline…</p>
+    </div>
+    <div class="rank">1° risultato</div>
+  </div>
+  <div id="mapc" class="abs card">
+    <img class="map" src="../assets/map-crop.jpg" alt="" />
+    <div id="osm">© OpenStreetMap</div>
+    <div id="pinshadow"></div>
+    <svg id="pin" viewBox="0 0 74 96"><path d="M37 2C18 2 3 17 3 36c0 25 34 58 34 58s34-33 34-58C71 17 56 2 37 2z" fill="#7b2531" stroke="#fff" stroke-width="4"/><circle cx="37" cy="36" r="13" fill="#f4eee4"/></svg>
+    <div id="placecard"><img src="/img/hero-sala-640.webp" alt="" /><div><b>Osteria del Borgo</b><span>Trattoria · Santa Maria della Versa · <span class="open">Aperto</span></span></div></div>
+  </div>
+
+  <!-- 5. RISULTATO -->
+  <div id="count" class="abs">
+    <div class="lbl">Sabato sera · tavoli prenotati</div>
+    <div class="num serif"><span id="n">0</span><small> / 14</small></div>
+    <div class="full serif" id="full">Sala piena.</div>
+    <div id="tables"></div>
+  </div>
+
+  <!-- 6. CTA -->
+  <div id="cta">
+    <img class="bgimg" src="/img/hero-sala-wide-1200.webp" alt="" />
+    <div class="shade"></div>
+    <div class="eyebrow">Sito · Prenotazioni · Google</div>
+    <div class="t serif"><span class="mask"><span>Il tuo locale</span></span><span class="mask"><span>online in</span></span><span class="mask"><span><em>7 giorni.</em></span></span></div>
+    <div class="dm"><svg width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M2 21l1.6-4.7A9.5 9.5 0 1 1 7.7 20zM12 4.2a7.8 7.8 0 0 0-6.6 12l.2.3-.9 2.7 2.8-.9.3.2A7.8 7.8 0 1 0 12 4.2z"/></svg>Scrivici in DM</div>
+    <div class="note">Progetto concept — Osteria del Borgo è un'attività inventata.<br/>Foto reali royalty-free (Unsplash).</div>
+  </div>
+
+  <div id="sign" class="abs">LIMITLESS</div>
+  <div id="veil"></div>
+</div>
+<script src="vendor/gsap.min.js"></script>
+<script src="spot.js"></script>
+</body>
+</html>
